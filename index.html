@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        section {
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin-right: 10px;
+        }
+
+        .todo-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+
+        }
+
+        .todo-item {
+            display: flex;
+            flex-direction: column;
+            
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 300px;
+        }
+
+        .todo-item .todo-text {
+            margin-right: 10px;
+        }
+
+        .todo-item .todo-text br {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .todo-item .todo-delete {
+            margin-top: 10px;
+            padding: 5px;
+            width: 50px;
+        }
+
+        .todo-item .todo-date {
+            font-size: 12px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <h1>Task 1</h1>
+        <button type="button" id="task1-changebg">Change background</button>
+        <button type="button" id="task1-resetbg">Reset background</button>
+
+        <button type="button" id="task1-changetxtcolor">Change text color</button>
+        <button type="button" id="task1-resettxtcolor">Reset text color</button>
+
+        <button type="button" id="task1-changetxtsize">Change font size</button>
+        <button type="button" id="task1-resettxtsize">Reset font size</button>
+    </section>
+
+    <section>
+        <h1>Task 2</h1>
+        <textarea name="todo" id="task2-todo" cols="30" rows="10"></textarea>
+        <button type="button" id="task2-add">Add</button>
+
+        <div class="todo-list" id="todo-list"></div>
+
+    </section>
+
+    <script>
+        let fontSize = 16;
+
+        function changeBgColor(color) {
+            document.body.style.backgroundColor = color;
+        }
+
+        function changeAllTextColors(color) {
+            let allText = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, a, button');
+            allText.forEach(element => {
+                element.style.color = color;
+            });
+        }
+
+        function changeAllTextSizes(size) {
+            let allText = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, a, button');
+            allText.forEach(element => {
+                element.style.fontSize = size;
+            });
+        }
+
+        function applyEvents() {
+            document.getElementById('task1-changebg').addEventListener('click', function() {
+                changeBgColor('red');
+            });
+
+            document.getElementById('task1-resetbg').addEventListener('click', function() {
+                changeBgColor('');
+            });
+
+            document.getElementById('task1-changetxtcolor').addEventListener('click', function() {
+                changeAllTextColors('blue');
+            });
+
+            document.getElementById('task1-resettxtcolor').addEventListener('click', function() {
+                changeAllTextColors('black');
+            });
+
+            document.getElementById('task1-changetxtsize').addEventListener('click', function() {
+                changeAllTextSizes(fontSize++ + 'px');
+            });
+
+            document.getElementById('task1-resettxtsize').addEventListener('click', function() {
+                changeAllTextSizes('');
+                fontSize = 16;
+            });
+
+            document.getElementById('task2-add').addEventListener('click', addTodo);
+        }
+
+        function addTodo() {
+            let todoList = document.getElementById('todo-list');
+
+            if (todoList.childElementCount >= 10) {
+                alert('You can only add 10 todos');
+                return;
+            }
+
+            let todoText = document.getElementById('task2-todo').value;
+            let newTodo = document.createElement('div');
+
+            let textTodo = document.createElement('p');
+            let deleteTodo = document.createElement('button');
+            let date = document.createElement('p');
+
+            newTodo.classList.add('todo-item');
+            textTodo.classList.add('todo-text');
+            deleteTodo.classList.add('todo-delete');
+            date.classList.add('todo-date');
+
+            deleteTodo.innerHTML = 'Delete';
+            deleteTodo.addEventListener('click', function() {
+                newTodo.remove();
+            });
+
+            textTodo.innerHTML = todoText.replace(/\n/g, '<br>');
+            date.innerHTML = new Date().toLocaleString();
+
+            newTodo.appendChild(textTodo);
+            newTodo.appendChild(deleteTodo);
+            newTodo.appendChild(date);
+
+            todoList.appendChild(newTodo);
+        }
+
+        document.addEventListener('DOMContentLoaded', applyEvents);
+    </script>
+</body>
+</html>
